@@ -61,13 +61,29 @@
 
     <!-- PROJECT 1 -->
     <div class="group mb-32 border-t pt-12">
+    <div class="flex justify-between mb-6">
+        <h3 class="font-serif text-3xl italic">Dom pri rieke</h3>
+        <span class="text-sm text-gray-400">01 / Rezidenčné</span>
+    </div>
 
-        <div class="flex justify-between mb-6">
-            <h3 class="font-serif text-3xl italic">Dom pri rieke</h3>
-            <span class="text-sm text-gray-400">01 / Rezidenčné</span>
-        </div>
+    <div class="relative w-full aspect-[16/9] image-container bg-gray-100">
 
-        <div class="relative w-full aspect-[16/9] image-container bg-gray-100">
+        <!-- COVER IMAGE (len pre efekt parallax, bude zmiznutý pri hover) -->
+        <img
+            src="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?q=80&w=1500"
+            class="parallax-img transition-opacity duration-500 group-hover:opacity-0 pointer-events-none"
+            alt="Dom pri rieke">
+
+        <!-- INTERAKTÍVNA IFRAME PREHLIADKA -->
+        <iframe
+            src="https://virtualneprehliadkycentak.github.io/Dom_rieka/"
+            class="absolute inset-0 w-full h-full border-0 z-20"
+            allowfullscreen
+            loading="lazy">
+        </iframe>
+    </div>
+</div>
+
 
             <!-- COVER IMAGE -->
             <img
