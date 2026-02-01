@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtuálne prehliadky Čenták | Moderné Portfólio</title>
-
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-
-    <!-- Tailwind -->
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -24,90 +24,306 @@
                         onyx: '#121212',
                         paper: '#f8f8f8',
                         luxegray: '#e5e5e5'
+                    },
+                    spacing: {
+                        '128': '32rem',
                     }
                 }
             }
         }
     </script>
 
+    <!-- Styles for Lenis and Custom Cursor -->
     <style>
-        body { background:#fff; color:#121212; overflow-x:hidden }
-        .image-container { position:relative; overflow:hidden }
+        html.lenis {
+            height: auto;
+        }
+        .lenis.lenis-smooth {
+            scroll-behavior: auto !important;
+        }
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+        .lenis.lenis-scrolling iframe {
+            pointer-events: none; /* Improves scroll performance over iframes */
+        }
+        
+        body {
+            background-color: #ffffff;
+            color: #121212;
+            overflow-x: hidden;
+        }
+
+        /* Reveal Overlay Logic */
+        .image-container {
+            overflow: hidden;
+            position: relative;
+        }
         .parallax-img {
-            position:absolute;
-            top:-15%;
-            width:100%;
-            height:130%;
-            object-fit:cover;
+            height: 130%; /* Taller than container for parallax */
+            width: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: -15%;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Line animation utility */
+        .separator {
+            width: 0%;
+            height: 1px;
+            background-color: #e5e5e5;
+        }
+
+        ::selection {
+            background: #121212;
+            color: #ffffff;
+        }
+
+        /* Iframe container styling */
+        .tour-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
     </style>
 </head>
+<body class="opacity-0 transition-opacity duration-700 ease-out" id="main-body">
 
-<body>
+    <!-- Navigation -->
+    <nav class="absolute top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-6 mix-blend-difference text-white">
+        <div class="text-lg font-serif italic tracking-wider">Virtuálne prehliadky Čenták</div>
+    </nav>
 
-<!-- HERO -->
-<header class="min-h-screen flex items-center px-6">
-    <h1 class="font-serif text-6xl md:text-8xl">
-        Ukážte svoj<br>
-        <span class="italic text-gray-400">priestor svetu</span>
-    </h1>
-</header>
-
-<!-- PORTFOLIO -->
-<section class="py-32 px-6">
-<div class="max-w-7xl mx-auto">
-
-    <h2 class="font-serif text-6xl mb-20">Vybrané Projekty</h2>
-
-    <!-- PROJECT 1 -->
-    <div class="group mb-32 border-t pt-12">
-    <div class="flex justify-between mb-6">
-        <h3 class="font-serif text-3xl italic">Dom pri rieke</h3>
-        <span class="text-sm text-gray-400">01 / Rezidenčné</span>
-    </div>
-
-    <div class="relative w-full aspect-[16/9] image-container bg-gray-100">
-
-        <!-- COVER IMAGE (len pre efekt parallax, bude zmiznutý pri hover) -->
-        <img
-            src="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?q=80&w=1500"
-            class="parallax-img transition-opacity duration-500 group-hover:opacity-0 pointer-events-none"
-            alt="Dom pri rieke">
-
-        <!-- INTERAKTÍVNA IFRAME PREHLIADKA -->
-        <iframe
-            src="https://virtualneprehliadkycentak.github.io/Dom_rieka/"
-            class="absolute inset-0 w-full h-full border-0 z-20"
-            allowfullscreen
-            loading="lazy">
-        </iframe>
-    </div>
-</div>
-
-
-            <!-- COVER IMAGE -->
-            <img
-                src="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?q=80&w=1500"
-                class="parallax-img z-10 transition-opacity duration-500 group-hover:opacity-0"
-                alt="Dom pri rieke">
-
-            <!-- 🔥 FUNKČNÁ VIRTUÁLNA PREHLIADKA -->
-            <iframe
-                src="https://virtualneprehliadkycentak.github.io/Dom_rieka/"
-                class="absolute inset-0 w-full h-full border-0 z-0"
-                allowfullscreen
-                loading="lazy">
-            </iframe>
-
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex flex-col justify-center px-6 md:px-12 pt-20">
+        <div class="max-w-7xl mx-auto w-full">
+            <h1 class="font-serif text-5xl md:text-8xl leading-[0.9] text-onyx mb-12 skew-velocity origin-bottom-left">
+                <span class="block scrub-rotate">Ukážte svoj</span>
+                <span class="block ml-4 md:ml-12 italic text-gray-400 scrub-rotate" style="--rotate-dir: -2deg">priestor svetu</span>
+                <span class="block scrub-rotate" style="--rotate-dir: 3deg">v digitálnej podobe</span>
+            </h1>
+            
+            <div class="flex flex-col md:flex-row justify-between items-end border-t border-luxegray pt-6 mt-12 overflow-hidden">
+                <p class="font-sans text-sm tracking-widest uppercase text-gray-500 max-w-xs skew-velocity">
+                    Virtuálne prehliadky Čenták <br> Est. 2026
+                </p>
+                <div class="font-serif text-2xl md:text-3xl max-w-xl text-right mt-8 md:mt-0 skew-velocity">
+                    Transformujeme fyzickú architektúru na nadčasové digitálne zážitky.
+                </div>
+            </div>
         </div>
+    </header>
+
+    <!-- Philosophy / Intro Section -->
+    <section id="philosophy" class="py-32 px-6 md:px-12 bg-paper">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
+            <div class="md:col-span-4">
+                <span class="block w-12 h-[1px] bg-onyx mb-6"></span>
+                <h2 class="font-sans text-sm uppercase tracking-widest text-gray-500">Filozofia</h2>
+            </div>
+            <div class="md:col-span-8">
+                <p class="font-serif text-4xl md:text-5xl leading-tight mb-12 text-onyx skew-velocity">
+                    Virtuálna prehliadka nie je len fotografia; je to pozvánka. Umožňuje vášmu priestoru dýchať a existovať permanentne v digitálnom svete.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 font-sans font-light text-lg text-gray-700">
+                    <p class="skew-velocity">
+                        Pre firmy aj súkromných klientov buduje možnosť prezentovať priestor na diaľku okamžitú dôveru. Premosťujeme priepasť medzi zvedavosťou a fyzickou prítomnosťou, ponúkajúc transparentný prieskum vo vysokej kvalite, dostupný odkiaľkoľvek na svete.
+                    </p>
+                    <p class="skew-velocity">
+                        Či už ide o luxusnú nehnuteľnosť, butikový hotel alebo firemné sídlo, náš prístup kladie dôraz na čisté línie, funkčnú navigáciu a nekompromisnú pozornosť k detailom. Nezachytávame len miestnosti, zachytávame atmosféru.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parallax Image Break -->
+    <div class="w-full h-[60vh] md:h-[80vh] image-container my-12">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop" 
+             alt="Moderná Architektúra" 
+             class="parallax-img">
     </div>
 
-</div>
-</section>
+    <!-- Portfolio / Showcase Section -->
+    <section id="showcase" class="py-32 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-end justify-between mb-24">
+                <h2 class="font-serif text-6xl md:text-8xl text-onyx scrub-rotate" style="--rotate-dir: 2deg">Vybrané<br>Projekty</h2>
+                <p class="hidden md:block font-sans text-sm uppercase tracking-widest text-gray-500 mb-4">Interakciou preskúmajte</p>
+            </div>
 
-<footer class="py-12 text-center text-sm text-gray-400">
-    © 2026 Virtuálne prehliadky Čenták
-</footer>
+            <!-- Project 1: Dom Rieka (Live Iframe) -->
+            <div class="group mb-32 border-t border-luxegray pt-12">
+                <div class="flex justify-between items-baseline mb-8">
+                    <h3 class="font-serif text-3xl italic">Dom Rieka</h3>
+                    <span class="font-sans text-sm text-gray-400">01 / Rezidenčné / Live Preview</span>
+                </div>
+                
+                <div class="relative w-full aspect-[16/9] bg-onyx rounded-sm overflow-hidden shadow-2xl">
+                    <!-- Interactive Iframe -->
+                    <div class="tour-wrapper">
+                        <iframe 
+                            src="https://virtualneprehliadkycentak.github.io/Dom_rieka/" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                <p class="mt-4 font-sans text-xs text-gray-400 uppercase tracking-widest">Pohybujte sa v priestore pomocou myši alebo dotyku</p>
+            </div>
 
+            <!-- Project 2 -->
+            <div class="group mb-32 border-t border-luxegray pt-12">
+                <div class="flex justify-between items-baseline mb-8">
+                    <h3 class="font-serif text-3xl italic">Ateliér Dizajnu</h3>
+                    <span class="font-sans text-sm text-gray-400">02 / Komerčné</span>
+                </div>
+                <div class="relative w-full aspect-[16/9] bg-gray-100 image-container rounded-sm">
+                    <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1500&auto=format&fit=crop" 
+                         class="parallax-img z-10 opacity-100 transition-opacity duration-500 group-hover:opacity-20" 
+                         alt="Interiér Kancelárie">
+                    <div class="absolute inset-0 z-0 bg-gray-900 flex items-center justify-center">
+                        <div class="text-center text-white opacity-80">
+                            <p class="font-sans tracking-widest uppercase text-xs">Pripravujeme 360° náhľad</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities / Service Section -->
+    <section class="py-24 px-6 md:px-12 bg-onyx text-white">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-16">
+            <div class="md:w-1/3">
+                <h2 class="font-serif text-5xl mb-6">Služby</h2>
+                <p class="text-gray-400 font-sans font-light">
+                    Technická kompetencia sa stretáva s estetickou prísnosťou. Vytvárame digitálne dvojčatá, ktoré slúžia ako silné aktívum pre vašu značku.
+                </p>
+            </div>
+            <div class="md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h4 class="font-sans uppercase tracking-widest text-xs text-gray-500 mb-4 border-b border-gray-700 pb-2">Klienti</h4>
+                    <p class="font-serif text-2xl leading-relaxed">
+                        Pre realitné kancelárie, ubytovacie zariadenia a súkromné osoby hľadajúce výnimočnosť.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-sans uppercase tracking-widest text-xs text-gray-500 mb-4 border-b border-gray-700 pb-2">Integrácia</h4>
+                    <p class="font-serif text-2xl leading-relaxed">
+                        Bezproblémové publikovanie na Google Street View a priame vloženie na web. HDR snímanie vo vysokom rozlíšení zaručuje čistotu v každom smere.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-32 px-6 md:px-12">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="font-serif text-6xl md:text-8xl mb-8 scrub-rotate" style="--rotate-dir: -2deg">Začnite Prehliadku</h2>
+            <p class="font-sans text-lg text-gray-600 mb-12 skew-velocity max-w-xl mx-auto">
+                Ste pripravení pozdvihnúť vašu online prezentáciu? Kontaktujte nás pre diskusiu o vašom priestore a naplánovanie snímania.
+            </p>
+            
+            <a href="contact.html" class="inline-block relative group overflow-hidden px-12 py-6 bg-onyx text-white rounded-full transition-all hover:scale-105">
+                <span class="relative z-10 font-sans uppercase tracking-widest text-sm flex items-center gap-2">
+                    Kontaktujte nás
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                </span>
+            </a>
+            
+            <div class="mt-24 flex justify-between border-t border-luxegray pt-8 text-xs font-sans uppercase tracking-widest text-gray-400">
+                <span>© 2026 Virtuálne prehliadky Čenták. Všetky práva vyhradené.</span>
+                <span>Slovensko / International</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            document.getElementById('main-body').classList.remove('opacity-0');
+
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+                mouseMultiplier: 1,
+                smoothTouch: false,
+                touchMultiplier: 2,
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            gsap.registerPlugin(ScrollTrigger);
+            
+            let proxy = { skew: 0 },
+                skewSetter = gsap.quickSetter(".skew-velocity", "skewY", "deg"),
+                clamp = gsap.utils.clamp(-15, 15);
+
+            ScrollTrigger.create({
+                onUpdate: (self) => {
+                    let skew = clamp(self.getVelocity() / -200);
+                    if (Math.abs(skew) > Math.abs(proxy.skew)) {
+                        proxy.skew = skew;
+                        gsap.to(proxy, {
+                            skew: 0,
+                            duration: 0.8,
+                            ease: "power3",
+                            overwrite: true,
+                            onUpdate: () => skewSetter(proxy.skew)
+                        });
+                    }
+                }
+            });
+
+            const images = document.querySelectorAll(".parallax-img");
+            images.forEach(img => {
+                gsap.to(img, {
+                    yPercent: 30,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: img.parentElement,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+            });
+
+            const rotateElements = document.querySelectorAll(".scrub-rotate");
+            rotateElements.forEach(el => {
+                const rotDir = el.style.getPropertyValue('--rotate-dir') || '3deg';
+                gsap.fromTo(el, 
+                    { y: 100, opacity: 0, rotate: rotDir, transformOrigin: "left bottom" },
+                    { y: 0, opacity: 1, rotate: 0, duration: 1, ease: "out",
+                        scrollTrigger: { trigger: el, start: "top 90%", end: "top 60%", scrub: 1 }
+                    }
+                );
+            });
+        });
+    </script>
 </body>
 </html>
